@@ -16,6 +16,7 @@
 
 package com.codelab.android.datastore.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.datastore.DataStore
@@ -59,7 +60,8 @@ class UserPreferencesRepository private constructor(context: Context) {
 
 
     // Build the DataStore
-    private val userPreferencesStore: DataStore<UserPreferences> = context.createDataStore(
+    private val userPreferencesStore: DataStore<UserPreferences> =
+        context.createDataStore(
         fileName = DATA_STORE_FILE_NAME,
         serializer = UserPreferencesSerializer,
         migrations = listOf(sharedPrefsMigration)
@@ -79,11 +81,13 @@ class UserPreferencesRepository private constructor(context: Context) {
     /**
      * Enable / disable sort by deadline.
      */
+    @SuppressLint("LongLogTag")
     suspend fun enableSortByDeadline(enable: Boolean) {
         // updateData handles data transactionally, ensuring that if the sort is updated at the same
         // time from another thread, we won't have conflicts
         userPreferencesStore.updateData { currentPreferences ->
             val currentOrder = currentPreferences.sortOrder
+            Log.v("UserPreferenceRepository", "currnetOrder:" + currentOrder)
             val newSortOrder =
                 if (enable) {
                     if (currentOrder == SortOrder.BY_PRIORITY) {
