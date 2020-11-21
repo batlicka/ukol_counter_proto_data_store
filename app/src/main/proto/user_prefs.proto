@@ -34,4 +34,7 @@ message UserPreferences {
 
   // user selected tasks sorting order
   SortOrder sort_order = 2;
+
+   int32 counter=3;
+
 }
