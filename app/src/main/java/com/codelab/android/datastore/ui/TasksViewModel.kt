@@ -31,8 +31,8 @@ import kotlinx.coroutines.launch
 data class TasksUiModel(
     val tasks: List<Task>,
     val showCompleted: Boolean,
-    val sortOrder: SortOrder
-    /*val count: Int*/
+    val sortOrder: SortOrder,
+    val count: Int
 )
 
 class TasksViewModel(
@@ -55,7 +55,8 @@ class TasksViewModel(
                 userPreferences.sortOrder,
             ),
             showCompleted = userPreferences.showCompleted,
-            sortOrder = userPreferences.sortOrder
+            sortOrder = userPreferences.sortOrder,
+            count = userPreferences.counter
         )
     }
     val tasksUiModel = tasksUiModelFlow.asLiveData()
