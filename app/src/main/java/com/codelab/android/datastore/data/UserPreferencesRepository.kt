@@ -60,14 +60,14 @@ class UserPreferencesRepository private constructor(context: Context) {
 
 
     // Build the DataStore
-    private val userPreferencesStore: DataStore<UserPreferences> =
+    private val dataStore: DataStore<UserPreferences> =
         context.createDataStore(
         fileName = DATA_STORE_FILE_NAME,
         serializer = UserPreferencesSerializer,
         migrations = listOf(sharedPrefsMigration)
     )
 
-    val userPreferencesFlow: Flow<UserPreferences> = userPreferencesStore.data
+    val userPreferencesFlow: Flow<UserPreferences> = dataStore.data
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
@@ -85,7 +85,7 @@ class UserPreferencesRepository private constructor(context: Context) {
     suspend fun enableSortByDeadline(enable: Boolean) {
         // updateData handles data transactionally, ensuring that if the sort is updated at the same
         // time from another thread, we won't have conflicts
-        userPreferencesStore.updateData { currentPreferences ->
+        dataStore.updateData { currentPreferences ->
             val currentOrder = currentPreferences.sortOrder
             Log.v("UserPreferenceRepository", "currnetOrder:" + currentOrder)
             val newSortOrder =
@@ -112,7 +112,7 @@ class UserPreferencesRepository private constructor(context: Context) {
     suspend fun enableSortByPriority(enable: Boolean) {
         // updateData handles data transactionally, ensuring that if the sort is updated at the same
         // time from another thread, we won't have conflicts
-        userPreferencesStore.updateData { currentPreferences ->
+        dataStore.updateData { currentPreferences ->
             val currentOrder = currentPreferences.sortOrder
             val newSortOrder =
                 if (enable) {
@@ -133,8 +133,14 @@ class UserPreferencesRepository private constructor(context: Context) {
     }
 
     suspend fun updateShowCompleted(completed: Boolean) {
-        userPreferencesStore.updateData { currentPreferences ->
+        dataStore.updateData { currentPreferences ->
             currentPreferences.toBuilder().setShowCompleted(completed).build()
+        }
+    }
+
+    suspend fun updateCounter(newCounterVal: Int){
+        dataStore.updateData { currentPreferences ->
+            currentPreferences.toBuilder().setCounter(newCounterVal).build()
         }
     }
 
