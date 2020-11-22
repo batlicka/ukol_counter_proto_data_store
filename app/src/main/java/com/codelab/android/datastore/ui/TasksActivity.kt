@@ -48,6 +48,7 @@ class TasksActivity : AppCompatActivity() {
         setupFilterListeners(viewModel)
         setupSort()
 
+        //kdykoliv se tasksUiModel změní, reaguj na změnu a přefiltruj seznam tasků
         viewModel.tasksUiModel.observe(owner = this) { tasksUiModel ->
             adapter.submitList(tasksUiModel.tasks)
             updateSort(tasksUiModel.sortOrder)
