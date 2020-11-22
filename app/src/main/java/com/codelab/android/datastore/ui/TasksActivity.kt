@@ -48,11 +48,16 @@ class TasksActivity : AppCompatActivity() {
         setupFilterListeners(viewModel)
         setupSort()
 
+        //increment counter after performing onCreate
+        viewModel.incrementCounter()
+
         //kdykoliv se tasksUiModel změní, reaguj na změnu a přefiltruj seznam tasků
+        //beru hodnoty z tasksUiModel a nastavuji je do view
         viewModel.tasksUiModel.observe(owner = this) { tasksUiModel ->
             adapter.submitList(tasksUiModel.tasks)
             updateSort(tasksUiModel.sortOrder)
             binding.showCompletedSwitch.isChecked = tasksUiModel.showCompleted
+            binding.count.text=tasksUiModel.count.toString()
         }
     }
 
