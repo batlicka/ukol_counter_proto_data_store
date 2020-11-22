@@ -138,8 +138,9 @@ class UserPreferencesRepository private constructor(context: Context) {
         }
     }
 
-    suspend fun updateCounter(newCounterVal: Int){
+    suspend fun updateCounter(){
         dataStore.updateData { currentPreferences ->
+            val newCounterVal = currentPreferences.counter+1
             currentPreferences.toBuilder().setCounter(newCounterVal).build()
         }
     }

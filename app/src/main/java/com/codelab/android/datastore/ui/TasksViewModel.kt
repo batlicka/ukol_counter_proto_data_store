@@ -102,6 +102,12 @@ class TasksViewModel(
             userPreferencesRepository.enableSortByPriority(enable)
         }
     }
+
+    fun incrementCounter(){
+        viewModelScope.launch {
+            userPreferencesRepository.updateCounter()
+        }
+    }
 }
 
 class TasksViewModelFactory(
